@@ -29,6 +29,9 @@ def setup_logging():
 
 logger = setup_logging()
 
+# 在导入配置后添加
+logger.info(f"当前使用的代理URL: {PROXY_URL if USE_PROXY else '未使用代理'}")
+
 def load_tokens():
     """从文件加载tokens,返回{token_id: token}格式的字典"""
     tokens_dict = {}
@@ -62,7 +65,12 @@ async def fetch_data_with_token(session, token, token_id, index):
     
     try:
         proxy = PROXY_URL if USE_PROXY else None
-        async with session.get(API_URL, headers=headers, ssl=False, proxy=proxy) as response:
+        timeout = aiohttp.ClientTimeout(total=20)
+        async with session.get(API_URL, 
+                             headers=headers, 
+                             ssl=False, 
+                             proxy=proxy,
+                             timeout=timeout) as response:
             if response.status == 200:
                 logger.info(f"✅ 账号{index} Token[{token_id}] - 请求状态: {response.status}")
                 data = await response.json()

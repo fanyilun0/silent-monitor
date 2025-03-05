@@ -19,6 +19,8 @@ services:
       - IS_DOCKER=true
       - HTTP_PROXY=http://host.docker.internal:7890
       - HTTPS_PROXY=http://host.docker.internal:7890
+    dns:
+      - 8.8.8.8
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped

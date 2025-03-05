@@ -6,14 +6,14 @@ load_dotenv()
 
 # Webhook配置 
 WEBHOOK_URL = os.getenv('WEBHOOK_URL')
-
+# 根据环境变量判断是否在Docker中运行
+IS_DOCKER = os.getenv('IS_DOCKER', 'false').lower() == 'true'
 # 应用名称
 APP_NAME = 'Silent Points Monitor'
 
 # 代理配置
-PROXY_URL = 'http://localhost:7890'
-USE_PROXY = False
-ALWAYS_NOTIFY = True
+PROXY_URL = 'http://host.docker.internal:7890' if IS_DOCKER else 'http://localhost:7890'
+USE_PROXY = True
 
 # 配置
 API_URL = "https://ceremony-backend.silentprotocol.org/users/points"
