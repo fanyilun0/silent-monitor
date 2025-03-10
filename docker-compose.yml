@@ -8,8 +8,7 @@ services:
     volumes:
       - type: bind
         source: .
-        target: /app/src
-        read_only: true
+        target: /app
       - type: volume
         source: silent-points-data
         target: /app/data

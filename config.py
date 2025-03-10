@@ -17,7 +17,7 @@ USE_PROXY = True
 
 # 配置
 API_URL = "https://ceremony-backend.silentprotocol.org/users/points"
-TOKENS_FILE = "tokens.txt"
-DATA_FILE = "points_data.json"
+TOKENS_FILE = "/app/tokens.txt" if IS_DOCKER else "tokens.txt"
+DATA_FILE = "/app/points_data.json" if IS_DOCKER else "points_data.json"
 INTERVAL = 86400  # 24小时间隔
 
