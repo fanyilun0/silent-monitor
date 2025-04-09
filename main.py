@@ -4,6 +4,7 @@ from datetime import datetime
 import logging
 import json
 import os
+import random
 
 # 导入配置
 from config import (
@@ -136,6 +137,10 @@ async def monitor_points():
                 logger.error("❌ 没有找到可用的tokens")
                 await asyncio.sleep(INTERVAL)
                 continue
+            
+            # 将tokens转换为列表并随机打乱顺序
+            token_items = list(tokens_dict.items())
+            random.shuffle(token_items)
                 
             all_data = {
                 'timestamp': datetime.now().isoformat(),
@@ -143,7 +148,7 @@ async def monitor_points():
             }
             
             async with aiohttp.ClientSession() as session:
-                for i, (token_id, token) in enumerate(tokens_dict.items()):
+                for i, (token_id, token) in enumerate(token_items):
                     data = await fetch_data_with_token(session, token, token_id, i)
                     if data:
                         data_with_id = {
@@ -151,7 +156,11 @@ async def monitor_points():
                             'data': data
                         }
                         all_data['points_data'].append(data_with_id)
-                    await asyncio.sleep(1)
+                    
+                    # 在请求之间添加随机时间间隔(0-120秒)
+                    random_sleep = random.randint(0, 120)
+                    logger.info(f"随机等待 {random_sleep} 秒后发起下一请求...")
+                    await asyncio.sleep(random_sleep)
                 
                 if all_data['points_data']:
                     # 构建并发送合并后的消息
